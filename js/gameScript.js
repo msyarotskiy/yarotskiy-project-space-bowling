@@ -1,41 +1,40 @@
-"use strict";
+'use strict';
 
-document.addEventListener("DOMContentLoaded", function () {
-    var canvas = $("#gameCanvas");
-    var context = canvas.get(0).getContext("2d");
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = $('#gameCanvas');
+    let context = canvas.get(0).getContext('2d');
 
-    var canvasWidth = canvas.width();
-    var canvasHeight = canvas.height();
+    let canvasWidth = canvas.width();
+    let canvasHeight = canvas.height();
 
-    var playGame;
+    let playGame;
 
-    var ui = $("#gameUI");
-    var uiIntro = $("#gameIntro");
-    var uiStats = $("#gameStats");
-    var uiComplete = $("#gameComplete");
-    var uiPlay = $("#gamePlay");
-    var uiReset = $(".gameReset");
-    var uiRemaining = $("#gameRemaining");
-    var uiScore = $(".gameScore");
+    const uiIntro = $('#gameIntro');
+    const uiStats = $('#gameStats');
+    const uiComplete = $('#gameComplete');
+    const uiPlay = $('#gamePlay');
+    const uiReset = $('.gameReset');
+    const uiRemaining = $('#gameRemaining');
+    const uiScore = $('.gameScore');
 
-    var platformX;
-    var platformY;
-    var platformOuterRadius;
-    var platformInnerRadius;
-    var asteroids;
+    let platformX;
+    let platformY;
+    let platformOuterRadius;
+    let platformInnerRadius;
+    let asteroids;
 
     // player
-    var player;
-    var playerOriginalX;
-    var playerOriginalY;
-    var playerSelected;
-    var playerMaxAbsVelocity;
-    var playerVelocityDampener;
-    var powerX;
-    var powerY;
-    var power;
-    var playerAngle;
-    var score;
+    let player;
+    let playerOriginalX;
+    let playerOriginalY;
+    let playerSelected;
+    let playerMaxAbsVelocity;
+    let playerVelocityDampener;
+    let powerX;
+    let powerY;
+    let power;
+    let playerAngle;
+    let score;
 
     function resetPlayer() {
         player.x = playerOriginalX;
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Reset and start the game
     function startGame() {
         playGame = false;
-        uiScore.html("0");
+        uiScore.html('0');
         uiStats.show();
 
         platformX = canvasWidth / 2;
@@ -56,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         platformInnerRadius = 75;
 
         // Asteroid
-        var Asteroid = function (x, y, radius, mass, friction) {
+        let Asteroid = function (x, y, radius, mass, friction) {
             this.x = x;
             this.y = y;
             this.radius = radius;
@@ -78,9 +77,9 @@ document.addEventListener("DOMContentLoaded", function () {
         playerAngle = 0;
         score = 0;
 
-        var pRadius = 15;
-        var pMass = 10;
-        var pFriction = 0.97;
+        let pRadius = 15;
+        let pMass = 10;
+        let pFriction = 0.97;
 
         playerOriginalX = canvasWidth / 2;
         playerOriginalY = canvasHeight - 150;
@@ -88,14 +87,14 @@ document.addEventListener("DOMContentLoaded", function () {
         player.player = true;
         asteroids.push(player);
 
-        var outerRing = 8;
-        var ringCount = 3;
-        var ringSpacing = (platformInnerRadius / (ringCount - 1));
+        let outerRing = 8;
+        let ringCount = 3;
+        let ringSpacing = (platformInnerRadius / (ringCount - 1));
 
-        for (var r = 0; r < ringCount; r++) {
-            var currentRing = 0;
-            var angle = 0;
-            var ringRadius = 0;
+        for (let r = 0; r < ringCount; r++) {
+            let currentRing = 0;
+            let angle = 0;
+            let ringRadius = 0;
 
             if (r == ringCount - 1) {
                 currentRing = 1;
@@ -105,9 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 ringRadius = platformInnerRadius - (ringSpacing * r);
             }
 
-            for (var a = 0; a < currentRing; a++) {
-                var x = 0;
-                var y = 0;
+            for (let a = 0; a < currentRing; a++) {
+                let x = 0;
+                let y = 0;
 
                 if (r == ringCount - 1) {
                     x = platformX;
@@ -117,9 +116,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     y = platformY + (ringRadius * Math.sin((angle * a) * (Math.PI / 180)));
                 }
 
-                var radius = 10;
-                var mass = 5;
-                var friction = 0.95;
+                let radius = 10;
+                let mass = 5;
+                let friction = 0.95;
 
                 asteroids.push(new Asteroid(x, y, radius, mass, friction));
             }
@@ -127,19 +126,19 @@ document.addEventListener("DOMContentLoaded", function () {
             uiRemaining.html(asteroids.length - 1);
         }
 
-        window.addEventListener("mousedown", function (e) {
+        window.addEventListener('mousedown', (e) => {
             if (!playerSelected && player.x == playerOriginalX && player.y == playerOriginalY) {
-                var canvasOffset = canvas.offset();
-                var canvasX = Math.floor(e.pageX - canvasOffset.left);
-                var canvasY = Math.floor(e.pageY - canvasOffset.top);
+                let canvasOffset = canvas.offset();
+                let canvasX = Math.floor(e.pageX - canvasOffset.left);
+                let canvasY = Math.floor(e.pageY - canvasOffset.top);
                 if (!playGame) {
                     playGame = true;
                     animate();
                 }
-                var dX = player.x - canvasX;
-                var dY = player.y - canvasY;
-                var distance = Math.sqrt((dX * dX) + (dY * dY));
-                var padding = 5;
+                let dX = player.x - canvasX;
+                let dY = player.y - canvasY;
+                let distance = Math.sqrt((dX * dX) + (dY * dY));
+                let padding = 5;
                 if (distance < player.radius + padding) {
                     powerX = player.x;
                     powerY = player.y;
@@ -148,14 +147,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        window.addEventListener("mousemove", function (e) {
+        window.addEventListener('mousemove', (e) => {
             if (playerSelected) {
-                var canvasOffset = canvas.offset();
-                var canvasX = Math.floor(e.pageX - canvasOffset.left);
-                var canvasY = Math.floor(e.pageY - canvasOffset.top);
-                var dX = canvasX - player.x;
-                var dY = canvasY - player.y;
-                var distance = Math.sqrt((dX * dX) + (dY * dY));
+                let canvasOffset = canvas.offset();
+                let canvasX = Math.floor(e.pageX - canvasOffset.left);
+                let canvasY = Math.floor(e.pageY - canvasOffset.top);
+                let dX = canvasX - player.x;
+                let dY = canvasY - player.y;
+                let distance = Math.sqrt((dX * dX) + (dY * dY));
                 if (distance * playerVelocityDampener < playerMaxAbsVelocity) {
                     powerX = canvasX;
                     powerY = canvasY;
@@ -171,10 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        window.addEventListener("mouseup", function (e) {
+        window.addEventListener('mouseup', (e) => {
             if (playerSelected) {
-                var dX = powerX - player.x;
-                var dY = powerY - player.y;
+                let dX = powerX - player.x;
+                let dY = powerY - player.y;
                 player.vX = -(dX * playerVelocityDampener);
                 player.vY = -(dY * playerVelocityDampener);
                 uiScore.html(++score);
@@ -207,14 +206,14 @@ document.addEventListener("DOMContentLoaded", function () {
     function animate() {
         context.clearRect(0, 0, canvasWidth, canvasHeight);
 
-        context.fillStyle = "rgb(100, 100, 100)";
+        context.fillStyle = 'rgb(100, 100, 100)';
         context.beginPath();
         context.arc(platformX, platformY, platformOuterRadius, 0, Math.PI * 2, true);
         context.closePath();
         context.fill();
 
         if (playerSelected) {
-            context.strokeStyle = "rgb(255, 255, 255)";
+            context.strokeStyle = 'rgb(255, 255, 255)';
             context.lineWidth = 3;
             context.beginPath();
             context.moveTo(player.x, player.y);
@@ -222,11 +221,11 @@ document.addEventListener("DOMContentLoaded", function () {
             context.closePath();
             context.stroke();
 
-            context.fillStyle = "rgb(255, 255, 255)";
+            context.fillStyle = 'rgb(255, 255, 255)';
             context.font = 'normal 20pt Lobster'
-            context.fillText("power: " + power, 10, 560);
+            context.fillText(`power: ${power}`, 10, 560);
             if (playerAngle <= 90 && playerAngle >= -90) {
-                context.fillText("angle: " + playerAngle + "°", 10, 580);
+                context.fillText(`angle: ${playerAngle}°`, 10, 580);
             }
         }
 
@@ -244,38 +243,38 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        context.fillStyle = "rgb(255, 255, 255)";
+        context.fillStyle = 'rgb(255, 255, 255)';
 
-        var deadAsteroids = new Array();
-        var asteroidsLength = asteroids.length;
+        let deadAsteroids = new Array();
+        let asteroidsLength = asteroids.length;
 
-        for (var i = 0; i < asteroidsLength; i++) {
-            var tmpAsteroid = asteroids[i];
+        for (let i = 0; i < asteroidsLength; i++) {
+            let tmpAsteroid = asteroids[i];
 
-            for (var j = i + 1; j < asteroidsLength; j++) {
-                var tmpAsteroidB = asteroids[j];
+            for (let j = i + 1; j < asteroidsLength; j++) {
+                let tmpAsteroidB = asteroids[j];
 
-                var dX = tmpAsteroidB.x - tmpAsteroid.x;
-                var dY = tmpAsteroidB.y - tmpAsteroid.y;
-                var distance = Math.sqrt((dX * dX) + (dY * dY));
+                let dX = tmpAsteroidB.x - tmpAsteroid.x;
+                let dY = tmpAsteroidB.y - tmpAsteroid.y;
+                let distance = Math.sqrt((dX * dX) + (dY * dY));
                 if (distance < tmpAsteroid.radius + tmpAsteroidB.radius) {
-                    var angle = Math.atan2(dY, dX);
-                    var sine = Math.sin(angle);
-                    var cosine = Math.cos(angle);
+                    let angle = Math.atan2(dY, dX);
+                    let sine = Math.sin(angle);
+                    let cosine = Math.cos(angle);
 
-                    var x = 0;
-                    var y = 0;
+                    let x = 0;
+                    let y = 0;
 
-                    var xB = dX * cosine + dY * sine;
-                    var yB = dY * cosine - dX * sine;
+                    let xB = dX * cosine + dY * sine;
+                    let yB = dY * cosine - dX * sine;
 
-                    var vX = tmpAsteroid.vX * cosine + tmpAsteroid.vY * sine;
-                    var vY = tmpAsteroid.vY * cosine - tmpAsteroid.vX * sine;
+                    let vX = tmpAsteroid.vX * cosine + tmpAsteroid.vY * sine;
+                    let vY = tmpAsteroid.vY * cosine - tmpAsteroid.vX * sine;
 
-                    var vXb = tmpAsteroidB.vX * cosine + tmpAsteroidB.vY * sine;
-                    var vYb = tmpAsteroidB.vY * cosine - tmpAsteroidB.vX * sine;
+                    let vXb = tmpAsteroidB.vX * cosine + tmpAsteroidB.vY * sine;
+                    let vYb = tmpAsteroidB.vY * cosine - tmpAsteroidB.vX * sine;
 
-                    var vTotal = vX - vXb;
+                    let vTotal = vX - vXb;
                     vX = ((tmpAsteroid.mass - tmpAsteroidB.mass) * vX + 2 * tmpAsteroidB.mass *
                         vXb) / (tmpAsteroid.mass + tmpAsteroidB.mass);
                     vXb = vTotal + vX;
@@ -309,9 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (!tmpAsteroid.player) {
-                var dXp = tmpAsteroid.x - platformX;
-                var dYp = tmpAsteroid.y - platformY;
-                var distanceP = Math.sqrt((dXp * dXp) + (dYp * dYp));
+                let dXp = tmpAsteroid.x - platformX;
+                let dYp = tmpAsteroid.y - platformY;
+                let distanceP = Math.sqrt((dXp * dXp) + (dYp * dYp));
                 if (distanceP > platformOuterRadius) {
                     if (tmpAsteroid.radius > 0) {
                         tmpAsteroid.radius -= 2;
@@ -327,24 +326,24 @@ document.addEventListener("DOMContentLoaded", function () {
             context.fill();
         }
 
-        var deadAsteroidsLength = deadAsteroids.length;
+        let deadAsteroidsLength = deadAsteroids.length;
         if (deadAsteroidsLength > 0) {
-            for (var di = 0; di < deadAsteroidsLength; di++) {
-                var tmpDeadAsteroid = deadAsteroids[di];
+            for (let di = 0; di < deadAsteroidsLength; di++) {
+                let tmpDeadAsteroid = deadAsteroids[di];
                 asteroids.splice(asteroids.indexOf(tmpDeadAsteroid), 1);
             }
         }
 
-        var remaining = asteroids.length - 1;
+        let remaining = asteroids.length - 1;
         uiRemaining.html(remaining);
         if (remaining === 0) {
             // Winner!
             playGame = false;
             uiStats.hide();
             uiComplete.show();
-            window.removeEventListener("mousedown");
-            window.removeEventListener("mousemove");
-            window.removeEventListener("mouseup");
+            window.removeEventListener('mousedown');
+            window.removeEventListener('mousemove');
+            window.removeEventListener('mouseup');
         }
 
         if (playGame) {
