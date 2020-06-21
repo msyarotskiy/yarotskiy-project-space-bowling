@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiReset = $('.gameReset');
     const uiRemaining = $('#gameRemaining');
     const uiScore = $('.gameScore');
+    const uiSave = $('.gameSave');
+    const uiGamerName = $('#gamerName');
+    const uiGameResult = $('#gameResult');
 
     let platformX;
     let platformY;
@@ -189,17 +192,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         uiStats.hide();
         uiComplete.hide();
+        uiGameResult.hide();
 
-        uiPlay.click(function (e) {
+        uiPlay.click((e) => {
             e.preventDefault();
             uiIntro.hide();
             startGame();
         });
 
-        uiReset.click(function (e) {
+        uiReset.click((e) => {
             e.preventDefault();
             uiComplete.hide();
             startGame();
+        });
+
+        uiSave.click((e) => {
+            e.preventDefault();
+            SaveResult();
         });
     }
 
@@ -351,6 +360,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function SaveResult() {
+        const ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
+        let updatePassword;
+        let result;
+        const stringName = 'YAROTSKIY_BOWLING_RECORDS';
+
+        updatePassword = Math.random();
+        $.ajax({
+                url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+                data: {f: 'LOCKGET', n: stringName, p: updatePassword},
+                success: lockGetReady, error: errorHandler
+            }
+        );
+
+        function lockGetReady(callresult) {
+            if (callresult.error != undefined)
+                alert(callresult.error);
+            else {
+                result = [];
+                if (callresult.result != "") {
+                    result = JSON.parse(callresult.result);
+                    if (!result.length)
+                        result = [];
+                }
+                result.push({name: uiGamerName[0].value, record: score});
+
+                $.ajax({
+                        url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+                        data: {f: 'UPDATE', n: stringName, v: JSON.stringify(result), p: updatePassword},
+                        success: updateReady, error: errorHandler
+                    }
+                );
+            }
+        }
+
+        function updateReady(callresult) {
+            if (callresult.error != undefined)
+                console.log(callresult.error);
+            uiGameResult.show();
+        }
+
+        function errorHandler(jqXHR, statusStr, errorStr) {
+            alert(statusStr + ' ' + errorStr);
+        }
+    }
+
     init();
+
+    //insertSorage();
+
+    function insertSorage() {
+
+        const ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
+        let updatePassword;
+        const stringName = 'YAROTSKIY_BOWLING_RECORDS';
+        updatePassword = Math.random();
+
+        $.ajax({
+                url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+                data: {f: 'INSERT', n: stringName, p: updatePassword},
+                success: updateReady, error: errorHandler
+            }
+        );
+
+        function updateReady(callresult) {
+            if (callresult.error != undefined)
+                console.log(callresult.error);
+        }
+
+        function errorHandler(jqXHR, statusStr, errorStr) {
+            alert(statusStr + ' ' + errorStr);
+        }
+    }
 
 });
