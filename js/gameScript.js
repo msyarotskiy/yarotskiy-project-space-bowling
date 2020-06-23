@@ -350,9 +350,9 @@ document.addEventListener('DOMContentLoaded', () => {
             playGame = false;
             uiStats.hide();
             uiComplete.show();
-            window.removeEventListener('mousedown');
-            window.removeEventListener('mousemove');
-            window.removeEventListener('mouseup');
+            $(window).unbind("mousedown");
+            $(window).unbind("mousemove");
+            $(window).unbind("mouseup");
         }
 
         if (playGame) {
@@ -365,6 +365,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let updatePassword;
         let result;
         const stringName = 'YAROTSKIY_BOWLING_RECORDS';
+
+        if (!/^[A-Z][a-z]+$/.test(uiGamerName[0].value)) {
+            uiGameResult.html("Only English letters are needed!");
+            uiGameResult.show();
+            return false;
+        }
+        uiGameResult.hide();
 
         updatePassword = Math.random();
         $.ajax({
@@ -398,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function updateReady(callresult) {
             if (callresult.error != undefined)
                 console.log(callresult.error);
+            uiGameResult.html("Your results have been saved!");
             uiGameResult.show();
         }
 

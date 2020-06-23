@@ -26,7 +26,7 @@ function readReady(callresult) {
 }
 
 function compareScore(a, b) {
-    return b.record - a.record;
+    return a.record - b.record;
 }
 
 function createRecordTable(uiTableScores, data) {
