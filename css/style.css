@@ -67,11 +67,37 @@ p, h1, a {
     width: 350px;
 }
 
-#gameIntro {
+#gameIntro, #gameMainPage, #gameResultPage, #gameRulesPage {
     background: rgba(0, 0, 0, 0.5);
     margin-top: 70px;
     padding: 40px 0;
     text-align: center;
+}
+
+canvas {
+    display: block;
+}
+
+#gameCanvas {
+    background: #001022;
+}
+
+#gameComplete {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 40px 0;
+    text-align: center;
+}
+
+#gameStats {
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+#gameStats .gameReset {
+    margin: 20px 20px 0 0;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .noSelect {
@@ -82,10 +108,6 @@ p, h1, a {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
-}
-
-.main {
-    background: #001022;
 }
 
 table {

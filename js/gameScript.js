@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = $('#gameCanvas');
-    let context = canvas.get(0).getContext('2d');
+    const context = canvas.get(0).getContext('2d');
 
     let canvasWidth = canvas.width();
     let canvasHeight = canvas.height();
