@@ -15,6 +15,10 @@ body {
     font-size: 18px;
 }
 
+canvas {
+    display: block;
+}
+
 h1 {
     font-size: 50px;
 }
@@ -52,6 +56,11 @@ p, h1, a {
     font-family: 'Lobster', cursive;
 }
 
+table {
+    border: white;
+    margin: 0 auto;
+}
+
 #game {
     height: 600px;
     left: 50%;
@@ -72,10 +81,6 @@ p, h1, a {
     margin-top: 70px;
     padding: 40px 0;
     text-align: center;
-}
-
-canvas {
-    display: block;
 }
 
 #gameCanvas {
@@ -108,9 +113,4 @@ canvas {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
-}
-
-table {
-    border: white;
-    margin: 0 auto;
 }
